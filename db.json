@@ -1,0 +1,22 @@
+{
+  "products": [
+    { "id": 1, "name": "json-server", "price": 300 }
+  ],
+  "sales": [
+    {
+      "year": 2015,
+      "amount": 5000,
+      "colorcode": "green"
+    },
+    {
+      "year": 2016,
+      "amount": 6000,
+      "colorcode": "red"
+    },
+    {
+      "year": 2017,
+      "amount": 6000,
+      "colorcode": "blue"
+    }
+  ]
+}
