@@ -1,1 +1,13 @@
 <router-outlet />
+<div style="width: 300px;">
+  <app-gauge-chart #gaugeChart1 [data]="[100,200,300]" [value]="250" [labels]="['Mon', 'Tue', 'Wed']" [showTooltip]="true" chartText="Weekly Sales" [colors]="colors"></app-gauge-chart>
+</div>
+
+<div style="width: 300px;">
+  <app-gauge-chart #gaugeChart2 [data]="[100,200,500]" [value]="300" [labels]="['Mon', 'Tue', 'Wed']" chartText="Monthly Sales" [colors]="colors"></app-gauge-chart>
+</div>
+
+<div style="width: 300px;">
+  <app-gauge-needle-chart #gaugeChart3 [data]="[100,400,500]" [value]="500" [labels]="['Mon', 'Tue', 'Wed']" [colors]="colors"></app-gauge-needle-chart>
+</div>
+
