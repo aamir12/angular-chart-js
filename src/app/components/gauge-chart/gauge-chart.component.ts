@@ -95,7 +95,7 @@ export class GaugeChartComponent implements AfterViewInit, OnChanges, OnDestroy{
         ctx.textAlign = 'center';
         ctx.baseline = 'middle';
         // ctx.fillText(`${datapointerPercentage.toFixed(1)}`, xCenter, yCenter);
-        ctx.fillText(`${pointerValue.toFixed(1)}`, xCenter, yCenter);
+        ctx.fillText(`${pointerValue.toFixed()}`, xCenter, yCenter);
         ctx.font = `bold ${chartTextFont} sans-serif`;
         ctx.fillText(chartText, xCenter, yCenter + 18);
 

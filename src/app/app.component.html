@@ -5,6 +5,7 @@
 
 <div style="width: 300px;">
   <app-gauge-chart #gaugeChart2 [data]="[100,200,500]" [value]="300" [labels]="['Mon', 'Tue', 'Wed']" chartText="Monthly Sales" [colors]="colors"></app-gauge-chart>
+  <button type="button" (click)="generatePdf()">Generate PDF</button>
 </div>
 
 <div style="width: 300px;">
