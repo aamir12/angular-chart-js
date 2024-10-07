@@ -1,7 +1,8 @@
-import {  Component, OnInit } from '@angular/core';
+import {  Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Chart, registerables, ChartConfiguration, ChartTypeRegistry, LayoutPosition } from 'chart.js';
 import { MasterService } from '../../services/master.service';
 import { Sales } from '../../_model/sales';
+import { generateUniqueId } from '../../utils/common';
 Chart.register(...registerables);
 
 @Component({
@@ -16,7 +17,8 @@ export class MychartComponent implements OnInit{
   labelData: number[] = [];
   realData: number[] = [];
   colorData: string[] = [];
-
+  canvasId: string = generateUniqueId();
+  @ViewChild('chartElementRef', {static: true}) chartElementRef!: ElementRef<HTMLCanvasElement>
   constructor(private servicee: MasterService) {}
 
   ngOnInit(): void {
@@ -24,7 +26,7 @@ export class MychartComponent implements OnInit{
   }
 
   loadChartData() {
-    this.loadDoughnutChart();
+    // this.loadDoughnutChart();
     this.loadDoughnutChartWithTargetPointer();
     // this.servicee.loadSales().subscribe((data) => {
     //   this.chartData = data;
@@ -273,7 +275,6 @@ export class MychartComponent implements OnInit{
       plugins: [doughnutPointer],
     };
 
-    // render init block
-    const myChart = new Chart('targetChart', config);
+    const myChart = new Chart(this.chartElementRef.nativeElement, config);
   }
 }
