@@ -1,11 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { GaugeChartComponent } from './components/gauge-chart/gauge-chart.component';
 import { GaugeNeedleChartComponent } from './components/gauge-needle-chart/gauge-needle-chart.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
-
+import { FileLoaderService } from './services/file-loader.service';
+declare const ZC:any;
+declare const zingchart:any;
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,7 +15,7 @@ import autoTable from 'jspdf-autotable';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   colors = [
     'rgba(255, 26, 104, 1)',
     'rgba(255, 206, 86, 1)',
@@ -21,7 +23,10 @@ export class AppComponent {
   ];
 
   @ViewChild('gaugeChart2', {static: true}) gaugeChart2!: GaugeChartComponent;
-  
+  constructor(
+    public fileLoader: FileLoaderService,
+    public renderer2: Renderer2
+  ) {}
   async generatePdf(chartElement: HTMLCanvasElement) {
     const canvas = await html2canvas(chartElement, { scale: 2 });
     const imgData = canvas.toDataURL('image/png');
@@ -141,6 +146,128 @@ export class AppComponent {
     // Save the PDF with the specified file name
     pdf.save('sales-report.pdf');
 
+  }
+
+
+  ngOnInit(): void {
+    this.fileLoader.loadJSFile(this.renderer2);
+    this.fileLoader.loadChartjs.subscribe((isLoaded) => {
+      if(isLoaded) {
+        this.drawChart();
+      }
+    })
+  }
+
+  drawChart() {
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+    let feed = (callback:any) => {
+      let tick: any = {};
+      tick.plot0 = Math.ceil(350 + Math.random() * 500);
+      callback(JSON.stringify(tick));
+    };
+
+    let chartConfig = {
+      type: 'gauge',
+      globals: {
+        fontSize: '25px',
+      },
+      plot: {
+        tooltip: {
+          borderRadius: '5px',
+        },
+        valueBox: {
+          text: '%v', // default
+          fontSize: '35px',
+          placement: 'center',
+          // rules: [{
+          //     text: '%v<br>EXCELLENT',
+          //     rule: '%v >= 700',
+          //   },
+          //   {
+          //     text: '%v<br>Good',
+          //     rule: '%v < 700 && %v > 640',
+          //   },
+          //   {
+          //     text: '%v<br>Fair',
+          //     rule: '%v < 640 && %v > 580',
+          //   },
+          //   {
+          //     text: '%v<br>Bad',
+          //     rule: '%v <  580',
+          //   },
+          // ],
+        },
+        size: '100%',
+      },
+      plotarea: {
+        marginTop: '80px',
+      },
+      scaleR: {
+        aperture: 180,
+        center: {
+          visible: false,
+        },
+        item: {
+          offsetR: 0,
+          rules: [{
+            offsetX: '15px',
+            rule: '%i == 9',
+          }, ],
+        },
+        labels: ['300', '', '', '', '', '', '580', '640', '700', '750', '', '850'],
+        maxValue: 850,
+        minValue: 300,
+        ring: {
+          rules: [{
+              backgroundColor: '#E53935',
+              rule: '%v <= 580',
+            },
+            {
+              backgroundColor: '#EF5350',
+              rule: '%v > 580 && %v < 640',
+            },
+            {
+              backgroundColor: '#FFA726',
+              rule: '%v >= 640 && %v < 700',
+            },
+            {
+              backgroundColor: '#29B6F6',
+              rule: '%v >= 700',
+            },
+          ],
+          size: '30px',
+        },
+        // step: 50,
+        tick: {
+          visible: false,
+        },
+      },
+      // refresh: {
+      //   type: 'feed',
+      //   url: 'feed()',
+      //   interval: 1500,
+      //   resetTimeout: 1000,
+      //   transport: 'js',
+      // },
+      series: [{
+        values: [755], // starting value
+        animation: {
+          effect: 'ANIMATION_EXPAND_VERTICAL',
+          method: 'ANIMATION_BACK_EASE_OUT',
+          sequence: 'null',
+          speed: 900,
+        },
+        backgroundColor: 'black',
+        indicator: [10, 10, 10, 10, 0.75],
+      }, ],
+    };
+
+    zingchart.render({
+      id: 'myChart',
+      data: chartConfig,
+      height: '100%',
+      width: '100%',
+    });
   }
   
 }
